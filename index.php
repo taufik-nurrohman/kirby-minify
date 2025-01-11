@@ -1,6 +1,6 @@
 <?php
 
-require substr(__FILE__, 0, -4) . DIRECTORY_SEPARATOR . 'index.php';
+require __DIR__ . DIRECTORY_SEPARATOR . 'module' . DIRECTORY_SEPARATOR . 'index.php';
 
 Kirby::plugin('taufik-nurrohman/kirby-minify', [
     'hooks' => [

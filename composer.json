@@ -1,21 +1,13 @@
 {
-    "name": "taufik-nurrohman/kirby-minify",
-    "description": "Kirby Example Plugin",
-    "license": "MIT",
-    "type": "kirby-plugin",
-    "version": "1.0.0",
-    "authors": [
-        {
-            "name": "Taufik Nurrohman",
-            "email": "hi@taufik-nurrohman.com"
-        }
-    ],
-    "require": {
-        "getkirby/composer-installer": "^1.1"
-    },
-    "config": {
-        "allow-plugins": {
-            "getkirby/composer-installer": true
-        }
+  "authors": [
+    {
+      "email": "hi@taufik-nurrohman.com",
+      "name": "Taufik Nurrohman"
     }
+  ],
+  "description": "CSS, HTML, JavaScript, JSON, PHP, and XML compressor for Kirby CMS.",
+  "license": "MIT",
+  "name": "taufik-nurrohman/kirby-minify",
+  "type": "kirby-plugin",
+  "version": "1.0.0"
 }
