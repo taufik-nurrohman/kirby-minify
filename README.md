@@ -54,8 +54,8 @@ composer require taufik-nurrohman/kirby-minify
 Options
 -------
 
-Kirby configuration settings for plugins go into `.\site\config\config.php`. The config file contains a return statement
-with an array of config options:
+Kirby configuration settings for plugins go into `.\site\config\config.php`. The configuration file contains a return
+statement with an array of configuration options:
 
 ~~~ php
 <?php
