@@ -10,8 +10,16 @@ Kirby::plugin('taufik-nurrohman/minify', [
             if ('GET' !== $method) {
                 return $result;
             }
-            // Do not apply the compressor when we are in the control panel
             $url = kirby()->urls();
+            // Do not apply the compressor to the Kirby’s API
+            if (0 === strpos($url->current . '/', $url->api . '/')) {
+                return $result;
+            }
+            // Do not apply the compressor to the Kirby’s Media
+            if (0 === strpos($url->current . '/', $url->media . '/')) {
+                return $result;
+            }
+            // Do not apply the compressor to the Kirby’s Panel
             if (0 === strpos($url->current . '/', $url->panel . '/')) {
                 return $result;
             }
