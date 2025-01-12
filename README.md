@@ -4,16 +4,6 @@ Kirby Minify
 CSS, HTML, JavaScript, JSON, PHP, and XML compressor for [Kirby CMS](https://github.com/getkirby). Just plug and play!
 This plugin has been tested with Kirby 5 with responses in the form of regular pages, JSON, and XML.
 
-Notes
------
-
-Bug reports and feature requests related to Kirby CMS can be submitted [here][bug/kirby-minify]. Bug reports related to
-compression (e.g. compression of inline CSS and JavaScript code causes them to break) can be submitted
-[here][bug/minify].
-
- [bug/kirby-minify]: https://github.com/taufik-nurrohman/kirby-minify/issues/new
- [bug/minify]: https://github.com/taufik-nurrohman/minify/issues/new
-
 Installation Methods
 --------------------
 
@@ -64,3 +54,13 @@ License
 
 This library is licensed under the [MIT License](LICENSE). Please consider
 [donating 💰](https://github.com/sponsors/taufik-nurrohman) if you benefit financially from this library.
+
+Notes
+-----
+
+Bug reports and feature requests related to Kirby CMS can be submitted [here][bug/kirby-minify]. Bug reports related to
+compression (e.g. compression of inline CSS and JavaScript code causes them to break) can be submitted
+[here][bug/minify].
+
+ [bug/kirby-minify]: https://github.com/taufik-nurrohman/kirby-minify/issues/new
+ [bug/minify]: https://github.com/taufik-nurrohman/minify/issues/new
