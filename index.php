@@ -72,6 +72,7 @@ Kirby::plugin('taufik-nurrohman/kirby-minify', [
                     return x\minify\h_t_m_l($render);
                 }
                 if (
+                    'application/feed+json' === $type ||
                     'application/geo+json' === $type ||
                     'application/json' === $type ||
                     'application/ld+json' === $type ||
