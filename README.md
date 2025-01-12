@@ -21,7 +21,7 @@ Installation Methods
 
 Download the plugin via the
 [download link](https://github.com/taufik-nurrohman/kirby-minify/archive/refs/tags/v1.0.0.zip) and extract. Then put the
-extracted folder into the `/site/plugins/` folder of your Kirby project. If the `plugins\` folder does not exist yet,
+extracted folder into the `.\site\plugins\` folder of your Kirby project. If the `plugins\` folder does not exist yet,
 create it first. The resulting folder structure should look like this:
 
 ~~~ txt
@@ -49,6 +49,44 @@ command from the root of your project:
 
 ~~~ sh
 composer require taufik-nurrohman/kirby-minify
+~~~
+
+Options
+-------
+
+Kirby configuration settings for plugins go into `.\site\config\config.php`. The config file contains a return statement
+with an array of config options:
+
+~~~ php
+<?php
+
+return [
+    'taufik-nurrohman.minify' => [
+        'CSS' => [ /* … */ ],
+        'HTML' => [
+            // This will cause the HTML minifier to be disabled.
+            'active' => false
+        ],
+        'JS' => [
+            'extensions' => [
+                // Disable JavaScript minification if you have a dynamic JavaScript file that ends with `.mjs` extension.
+                // By default, it will be enabled for dynamic files that end with both `.js` and `.mjs`.
+                'mjs' => false
+            ]
+        ],
+        'JSON' => [
+            'types' => [
+                // Disable JSON minification if the current MIME type of the dynamic JSON file is `application/feed+json`.
+                // Other dynamic JSON files with other MIME types will continue to be minified.
+                'application/feed+json' => false
+            ]
+        ],
+        // PHP minifier does nothing in general, unless you want to use its function (the `x\minify\p_h_p` function) to
+        // make some kind of PHP minifier in the control panel with the click of a button.
+        // 'PHP' => [],
+        'XML' => [ /* … */ ]
+    ]
+];
 ~~~
 
 License
