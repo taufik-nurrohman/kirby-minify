@@ -103,7 +103,7 @@ return [
 Tests
 -----
 
-The [taufik-nurrohman/minify](https://github.com/taufik-nurrohman/minify) project has it’s own tests. Here is an easy
+The [@taufik-nurrohman/minify](https://github.com/taufik-nurrohman/minify) project has it’s own tests. Here is an easy
 way you can do to run various tests specifically for this plugin:
 
  1. Create a `.\content\my-content\test.txt` file.
@@ -131,7 +131,7 @@ Notes
    to compression (e.g. compression of inline CSS and JavaScript code causes them to break) can be submitted
    [here][bug/minify].
  - The `minify\` folder in this project contains the contents of the
-   [taufik-nurrohman/minify](https://github.com/taufik-nurrohman/minify) repository. Ideally, it should be set as a
+   [@taufik-nurrohman/minify](https://github.com/taufik-nurrohman/minify) repository. Ideally, it should be set as a
    [Git sub-module](https://git-scm.com/book/en/v2/Git-Tools-Submodules), however I decided to do a manual copy and
    paste of the files and folders to make it easier for users to install this plugin. Not everyone understands how to
    bring Git sub-modules into the project after doing a `git clone`. Git archive also won’t merge sub-modules
