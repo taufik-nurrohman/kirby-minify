@@ -2,68 +2,102 @@
 
 require __DIR__ . DIRECTORY_SEPARATOR . 'minify' . DIRECTORY_SEPARATOR . 'index.php';
 
-// Create globally reusable function(s) to be used by other(s)
-function minify_css(...$v) {
-    return x\minify\c_s_s(...$v);
-}
-
-function minify_html(...$v) {
-    return x\minify\h_t_m_l(...$v);
-}
-
-function minify_js(...$v) {
-    return x\minify\j_s(...$v);
-}
-
-function minify_json(...$v) {
-    return x\minify\j_s_o_n(...$v);
-}
-
-function minify_php(...$v) {
-    return x\minify\p_h_p(...$v);
-}
-
-function minify_xml(...$v) {
-    return x\minify\x_m_l(...$v);
-}
-
-// Register plugin hook that runs after the response body is ready
+// Register a plugin hook to execute after the response body is ready
 Kirby::plugin('taufik-nurrohman/kirby-minify', [
     'hooks' => [
         'route:after' => function ($route, $path, $method, $result) {
-            // Apply minifier only to the `GET` request
+            // Apply the compressor only to the `GET` request
             if ('GET' !== $method) {
                 return $result;
             }
-            // Disable minifier if we are in the control panel
-            if (0 === strpos($path . '/', 'panel/')) {
+            // Do not apply the compressor when we are in the control panel
+            $url = kirby()->urls();
+            if (0 === strpos($url->current . '/', $url->panel . '/')) {
                 return $result;
             }
-            // Response body is a plain string
+            // Response body is a simple string
             if (is_string($result)) {
-                // TODO: Detect content type from the string
                 $result = trim($result);
-                if (0 === strpos($result, '{')) {
-                    // TODO
+                // Determine the content type from the extension in URL
+                if ($type = pathinfo($path, PATHINFO_EXTENSION)) {
+                    if (
+                        'htm' === $type ||
+                        'html' === $type
+                    ) {
+                        return x\minify\h_t_m_l($result);
+                    }
+                    if (
+                        'json' === $type ||
+                        'jsonp' === $type ||
+                        'webmanifest' === $type
+                    ) {
+                        return x\minify\j_s_o_n($result);
+                    }
+                    if (
+                        'xht' === $type ||
+                        'xhtm' === $type ||
+                        'xhtml' === $type ||
+                        'xml' === $type
+                    ) {
+                        return x\minify\x_m_l($result);
+                    }
+                // Determine the content type from the string
+                } else {
+                    if ('<!doctype' === strtolower(strtok($result, " \n\r\t")) || '</html>' === strtolower(substr($result, -7))) {
+                        return x\minify\h_t_m_l($result);
+                    }
+                    if (isset($result[0]) && false !== strpos('[{', $result[0]) && false !== strpos(']}', substr($result, -1))) {
+                        if (function_exists('json_validate') && json_validate($result) || null !== json_decode($result)) {
+                            return x\minify\j_s_o_n($result);
+                        }
+                    }
+                    if ('<?xml' === strtolower(strtok($result, " \n\r\t?"))) {
+                        return x\minify\x_m_l($result);
+                    }
                 }
-                if (0 === strpos($result, '<?xml')) {
-                    // TODO
-                }
-                return minify_html($result);
+                // Do nothing!
+                return $result;
             }
-            // Response body is an object, like `Kirby\Cms\Page`
-            if (is_object($result) && method_exists($result, 'render')) {
-                $render = $result->render();
-                if ($template = $result->template()) {
-                    $type = $template->type() ?? 'html';
-                    if ('json' === $type) {
-                        return minify_json($render);
-                    }
-                    if ('xml' === $type) {
-                        return minify_xml($render);
-                    }
+            // Response body is an object, such as `Kirby\Cms\Page` or `Kirby\Cms\Responder`
+            if (is_object($result) && (method_exists($result, 'render') || method_exists($result, 'send'))) {
+                $raw = method_exists($result, 'send') ? $result->send() : 0;
+                $template = method_exists($result, 'template') ? $result->template() : 0;
+                $render = (string) ($raw ?: $result->render());
+                $type = ($template ? $template->type() : ($raw ? $raw->type() : pathinfo($path, PATHINFO_EXTENSION))) ?: 'html';
+                if (
+                    'htm' === $type ||
+                    'html' === $type ||
+                    'text/html' === $type
+                ) {
+                    return x\minify\h_t_m_l($render);
                 }
-                return minify_html($render);
+                if (
+                    'application/geo+json' === $type ||
+                    'application/json' === $type ||
+                    'application/ld+json' === $type ||
+                    'audio/midi' === $type ||
+                    'audio/x-midi' === $type ||
+                    'json' === $type ||
+                    'jsonp' === $type ||
+                    'text/json' === $type ||
+                    'webmanifest' === $type
+                ) {
+                    return x\minify\j_s_o_n($render);
+                }
+                if (
+                    'application/atom+xml' === $type ||
+                    'application/mathml+xml' === $type ||
+                    'application/rdf+xml' === $type ||
+                    'application/rss+xml' === $type ||
+                    'image/svg+xml' === $type ||
+                    'text/xml' === $type ||
+                    'xht' === $type ||
+                    'xhtm' === $type ||
+                    'xhtml' === $type ||
+                    'xml' === $type
+                ) {
+                    return x\minify\x_m_l($render);
+                }
             }
             // Do nothing!
             return $result;
