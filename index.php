@@ -3,7 +3,7 @@
 require __DIR__ . DIRECTORY_SEPARATOR . 'minify' . DIRECTORY_SEPARATOR . 'index.php';
 
 // Register a plugin hook to execute after the response body is ready
-Kirby::plugin('taufik-nurrohman/kirby-minify', [
+Kirby::plugin('taufik-nurrohman/minify', [
     'hooks' => [
         'route:after' => function ($route, $path, $method, $result) {
             // Apply the compressor only to the `GET` request
