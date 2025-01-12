@@ -100,6 +100,24 @@ return [
 ];
 ~~~
 
+Tests
+-----
+
+The [taufik-nurrohman/minify](https://github.com/taufik-nurrohman/minify) project has it’s own tests. Here is an easy
+way you can do to run various tests specifically for this plugin:
+
+ 1. Create a `.\content\my-content\test.txt` file.
+ 2. Create a `.\site\templates\test.css.php` file and paste in some random CSS code there to test the CSS minifier in
+    action on dynamic CSS file that can be accessed via `http://127.0.0.1/my-content.css`.
+ 3. Create a `.\site\templates\test.js.php` file and paste in some random JavaScript code there to test the JavaScript
+    minifier in action on dynamic JavaScript file that can be accessed via `http://127.0.0.1/my-content.js`.
+ 4. Create a `.\site\templates\test.json.php` file and paste in some random JSON code there to test the JSON minifier in
+    action on dynamic JSON file that can be accessed via `http://127.0.0.1/my-content.json`.
+ 5. Create a `.\site\templates\test.xml.php` file and paste in some random XML code there to test the XML minifier in
+    action on dynamic XML file that can be accessed via `http://127.0.0.1/my-content.xml`.
+ 6. To test the HTML file minification, there is nothing you have to do. Simply go to your front-end site and view the
+    source code! 😉
+
 License
 -------
 
