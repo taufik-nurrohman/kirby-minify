@@ -100,6 +100,27 @@ return [
 ];
 ~~~
 
+Notes
+-----
+
+ 1. Bug reports and feature requests related to Kirby CMS can be submitted [here][bug/kirby-minify]. Bug reports related
+    to compression (e.g. compression of inline CSS and JavaScript code causes them to break) can be submitted
+    [here][bug/minify].
+ 2. The `minify\` folder in this project contains the contents of the
+    [@taufik-nurrohman/minify](https://github.com/taufik-nurrohman/minify) repository. Ideally, it should be set as a
+    [Git sub-module](https://git-scm.com/book/en/v2/Git-Tools-Submodules), however I decided to do a manual copy and
+    paste of the files and folders to make it easier for users to install this plugin. Not everyone understands how to
+    bring Git sub-modules into the project after doing a `git clone`. Git archive also won’t merge sub-modules
+    automatically into the package.
+ 3. Don’t confuse the internal plugin name with the GitHub repository name (and also with the Composer package name). As
+    explained in [plugin best practices](https://github.com/getkirby/getkirby.com/blob/e54f7c8b5bfe9e53415899e7939b09de03f206b9/content/docs/1_guide/17_plugins/7_best-practices/guide.txt#L94)
+    and [custom plugin naming conventions](https://github.com/getkirby/getkirby.com/blob/e54f7c8b5bfe9e53415899e7939b09de03f206b9/content/docs/1_guide/17_plugins/1_custom-plugins/guide.txt#L55-L57),
+    it is best to name the plugin without the `kirby-` prefix if you want the plugin to be listed properly in the
+    [official plugin repository](https://getkirby.com/plugins) later.
+
+ [bug/kirby-minify]: https://github.com/taufik-nurrohman/kirby-minify/issues/new
+ [bug/minify]: https://github.com/taufik-nurrohman/minify/issues/new
+
 Tests
 -----
 
@@ -123,24 +144,3 @@ License
 
 This library is licensed under the [MIT License](LICENSE). Please consider
 [donating 💰](https://github.com/sponsors/taufik-nurrohman) if you benefit financially from this library.
-
-Notes
------
-
- - Bug reports and feature requests related to Kirby CMS can be submitted [here][bug/kirby-minify]. Bug reports related
-   to compression (e.g. compression of inline CSS and JavaScript code causes them to break) can be submitted
-   [here][bug/minify].
- - The `minify\` folder in this project contains the contents of the
-   [@taufik-nurrohman/minify](https://github.com/taufik-nurrohman/minify) repository. Ideally, it should be set as a
-   [Git sub-module](https://git-scm.com/book/en/v2/Git-Tools-Submodules), however I decided to do a manual copy and
-   paste of the files and folders to make it easier for users to install this plugin. Not everyone understands how to
-   bring Git sub-modules into the project after doing a `git clone`. Git archive also won’t merge sub-modules
-   automatically into the package.
- - Don’t confuse the internal plugin name with the GitHub repository name (and also with the Composer package name). As
-   explained in [plugin best practices](https://github.com/getkirby/getkirby.com/blob/e54f7c8b5bfe9e53415899e7939b09de03f206b9/content/docs/1_guide/17_plugins/7_best-practices/guide.txt#L94)
-   and [custom plugin naming conventions](https://github.com/getkirby/getkirby.com/blob/e54f7c8b5bfe9e53415899e7939b09de03f206b9/content/docs/1_guide/17_plugins/1_custom-plugins/guide.txt#L55-L57),
-   it is best to name the plugin without the `kirby-` prefix if you want the plugin to be listed properly in the
-   [official plugin repository](https://getkirby.com/plugins) later.
-
- [bug/kirby-minify]: https://github.com/taufik-nurrohman/kirby-minify/issues/new
- [bug/minify]: https://github.com/taufik-nurrohman/minify/issues/new
