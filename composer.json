@@ -6,8 +6,13 @@
     }
   ],
   "description": "CSS, HTML, JavaScript, JSON, PHP, and XML compressor for Kirby CMS.",
+  "homepage": "https://github.com/taufik-nurrohman/kirby-minify",
   "license": "MIT",
   "name": "taufik-nurrohman/kirby-minify",
+  "support": {
+    "docs": "https://github.com/taufik-nurrohman/kirby-minify/blob/main/README.md",
+    "source": "https://github.com/taufik-nurrohman/kirby-minify"
+  },
   "type": "kirby-plugin",
   "version": "1.0.0"
 }

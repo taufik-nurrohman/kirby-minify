@@ -69,7 +69,7 @@ Notes
    paste of the files and folders to make it easier for users to install this plugin. Not everyone understands how to
    bring Git sub-modules into the project after doing a `git clone`. Git archive also won’t merge sub-modules
    automatically into the package.
- - Don’t confuse the internal plugin name with the GitHub repository name (and also the Composer package name), as
+ - Don’t confuse the internal plugin name with the GitHub repository name (and also with the Composer package name), as
    explained in [plugin best practices](https://github.com/getkirby/getkirby.com/blob/e54f7c8b5bfe9e53415899e7939b09de03f206b9/content/docs/1_guide/17_plugins/7_best-practices/guide.txt#L94)
    and [custom plugin naming conventions](https://github.com/getkirby/getkirby.com/blob/e54f7c8b5bfe9e53415899e7939b09de03f206b9/content/docs/1_guide/17_plugins/1_custom-plugins/guide.txt#L55-L57).
    It is best to name the plugin without the `kirby-` prefix if you want the plugin to be listed properly in the
