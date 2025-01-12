@@ -1,8 +1,8 @@
 Kirby Minify
 ============
 
-CSS, HTML, JavaScript, JSON, PHP, and XML compressor for [Kirby CMS](https://github.com/getkirby). Just plug and play!
-This plugin has been tested with Kirby 5 with responses in the form of regular pages, JSON, and XML.
+CSS, HTML, JavaScript, JSON, PHP, and XML compressor for [Kirby CMS](https://github.com/getkirby). Just plug and
+play! 🪄 This plugin has been tested with Kirby 5 with responses in the form of regular pages, JSON, and XML.
 
 Installation Methods
 --------------------
