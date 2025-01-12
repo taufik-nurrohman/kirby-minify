@@ -9,9 +9,9 @@ Installation Methods
 
 > [!TIP]
 >
-> `your-plugin-name` is the name you want to use for the plugin. The recommended plugin name is `minify`, but you may
-> want to use a different name for certain purposes. For example, Kirby does not have a hook priority feature, so the
-> order in which hooks are executed depends entirely on the name of the plugin folder. This plugin should ideally be
+> The `your-plugin-name\` is the name you want to use for the plugin. The recommended plugin name is `minify\`, but you
+> may want to use a different name for certain purposes. For example, Kirby does not have a hook priority feature, so
+> the order in which hooks are executed depends entirely on the name of the plugin folder. This plugin should ideally be
 > executed at the very end, so it is a good idea to give it a folder name that allows it to be positioned at the very
 > end of the plugin list.
 
@@ -58,9 +58,15 @@ This library is licensed under the [MIT License](LICENSE). Please consider
 Notes
 -----
 
-Bug reports and feature requests related to Kirby CMS can be submitted [here][bug/kirby-minify]. Bug reports related to
-compression (e.g. compression of inline CSS and JavaScript code causes them to break) can be submitted
-[here][bug/minify].
+ - Bug reports and feature requests related to Kirby CMS can be submitted [here][bug/kirby-minify]. Bug reports related
+   to compression (e.g. compression of inline CSS and JavaScript code causes them to break) can be submitted
+   [here][bug/minify].
+ - The `minify\` folder in this project contains the contents of the
+   [taufik-nurrohman/minify](https://github.com/taufik-nurrohman/minify) repository. Ideally, it should be set as a
+   [Git sub-module](https://git-scm.com/book/en/v2/Git-Tools-Submodules), however I decided to do a manual copy and
+   paste of the files and folders to make it easier for users to install this plugin. Not everyone understands how to
+   bring Git sub-modules into the project after doing a `git clone`. Git archive also won’t merge sub-modules
+   automatically into the package.
 
  [bug/kirby-minify]: https://github.com/taufik-nurrohman/kirby-minify/issues/new
  [bug/minify]: https://github.com/taufik-nurrohman/minify/issues/new
