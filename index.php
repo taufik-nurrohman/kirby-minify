@@ -163,6 +163,7 @@ Kirby::plugin('taufik-nurrohman/minify', [
         'XML' => [
             'active' => true,
             'extensions' => [
+                'svg' => true,
                 'xht' => true,
                 'xhtm' => true,
                 'xhtml' => true,
