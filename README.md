@@ -70,7 +70,7 @@ return [
         'JS' => [
             'extensions' => [
                 // Disable JavaScript minification if you have a dynamic JavaScript file that ends with `.mjs` extension.
-                // By default, it will be enabled for dynamic files that end with both `.js` and `.mjs`.
+                // By default, it will be enabled for dynamic files that end with both `.js` and `.mjs` extensions.
                 'mjs' => false
             ]
         ],
@@ -88,7 +88,7 @@ return [
         'XML' => [
             // Provide custom XML minification function to replace the default XML minification function (the `x\minify\x_m_l()` function).
             'f' => function (?string $value): ?string {
-                return preg_replace('/>\s*</', '><' $value);
+                return preg_replace('/>\s*</', '><', (string) $value);
             },
             // Provide custom XML file detection based on its content in case the current dynamic file extension is not
             // detected as XML file and the current dynamic file MIME type is also not detected as XML file.
