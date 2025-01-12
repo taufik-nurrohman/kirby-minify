@@ -6,8 +6,8 @@ tested with Kirby 5 with responses in the form of regular pages, JSON, and XML.
 
 _Just plug and play!_
 
-Installation Methods
---------------------
+Installation
+------------
 
 > [!TIP]
 >
@@ -81,10 +81,21 @@ return [
                 'application/feed+json' => false
             ]
         ],
-        // PHP minifier does nothing in general, unless you want to use its function (the `x\minify\p_h_p` function) to
-        // make some kind of PHP minifier in the control panel with the click of a button.
+        // PHP minifier does nothing in general, unless you want to use its function (the `x\minify\p_h_p()` function) to
+        // make some kind of PHP minifier in the control panel with the click of a button. Configuration options for this
+        // minifier will have no effect.
         // 'PHP' => [],
-        'XML' => [ /* … */ ]
+        'XML' => [
+            // Provide custom XML minification function to replace the default XML minification function (the `x\minify\x_m_l()` function).
+            'f' => function (?string $value): ?string {
+                return preg_replace('/>\s*</', '><' $value);
+            },
+            // Provide custom XML file detection based on its content in case the current dynamic file extension is not
+            // detected as XML file and the current dynamic file MIME type is also not detected as XML file.
+            'test' => function (string $value) {
+                return '<?xml' === strtolower(strtok($value, " \n\r\t?"));
+            }
+        ]
     ]
 ];
 ~~~

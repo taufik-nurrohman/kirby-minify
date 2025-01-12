@@ -16,7 +16,7 @@ Kirby::plugin('taufik-nurrohman/minify', [
                 return $result;
             }
             $extensions = $tests = $types = [];
-            $options = option('taufik-nurrohman.' . basename(__DIR__));
+            $options = option('taufik-nurrohman.minify');
             foreach ($options as $k => $v) {
                 // Assume configuration without `active` key as active by default
                 if (array_key_exists('active', $v) && !$v['active']) {
@@ -53,7 +53,7 @@ Kirby::plugin('taufik-nurrohman/minify', [
                 // Determine the content type from the string
                 } else {
                     foreach ($tests as $k => $v) {
-                        if (call_user_func($v, $result) && is_callable($f = $options[$k]['f'] ?? 0)) {
+                        if (call_user_func($v, (string) $result) && is_callable($f = $options[$k]['f'] ?? 0)) {
                             return call_user_func($f, $result);
                         }
                     }
@@ -99,7 +99,7 @@ Kirby::plugin('taufik-nurrohman/minify', [
                 'html' => true
             ],
             'f' => "x\\minify\\h_t_m_l",
-            'test' => function ($v) {
+            'test' => function (string $v) {
                 return '<!doctype' === strtolower(strtok($v, " \n\r\t")) || '</html>' === strtolower(substr($v, -7));
             },
             'types' => [
@@ -127,7 +127,7 @@ Kirby::plugin('taufik-nurrohman/minify', [
                 'webmanifest' => true
             ],
             'f' => "x\\minify\\j_s_o_n",
-            'test' => function ($v) {
+            'test' => function (string $v) {
                 if (isset($v[0]) && false !== strpos('[{', $v[0]) && false !== strpos(']}', substr($v, -1))) {
                     if (function_exists('json_validate') && json_validate($v) || null !== json_decode($v)) {
                         return true;
@@ -169,7 +169,7 @@ Kirby::plugin('taufik-nurrohman/minify', [
                 'xml' => true
             ],
             'f' => "x\\minify\\x_m_l",
-            'test' => function ($v) {
+            'test' => function (string $v) {
                 return '<?xml' === strtolower(strtok($v, " \n\r\t?"));
             },
             'types' => [
