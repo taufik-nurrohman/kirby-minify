@@ -108,6 +108,7 @@ Kirby::plugin('taufik-nurrohman/minify', [
             ],
             'f' => "x\\minify\\h_t_m_l",
             'test' => function (string $v) {
+                $v = trim($v);
                 return '<!doctype' === strtolower(strtok($v, " \n\r\t")) || '</html>' === strtolower(substr($v, -7));
             },
             'types' => [
@@ -136,6 +137,7 @@ Kirby::plugin('taufik-nurrohman/minify', [
             ],
             'f' => "x\\minify\\j_s_o_n",
             'test' => function (string $v) {
+                $v = trim($v);
                 if (isset($v[0]) && false !== strpos('[{', $v[0]) && false !== strpos(']}', substr($v, -1))) {
                     if (function_exists('json_validate') && json_validate($v) || null !== json_decode($v)) {
                         return true;
@@ -179,7 +181,8 @@ Kirby::plugin('taufik-nurrohman/minify', [
             ],
             'f' => "x\\minify\\x_m_l",
             'test' => function (string $v) {
-                return '<?xml' === strtolower(strtok($v, " \n\r\t?"));
+                $v = trim($v);
+                return '<?xml' === trim(strtolower(strtok($v, " \n\r\t")), '?');
             },
             'types' => [
                 'application/atom+xml' => true,
