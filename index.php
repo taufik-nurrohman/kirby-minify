@@ -2,6 +2,40 @@
 
 require __DIR__ . DIRECTORY_SEPARATOR . 'minify' . DIRECTORY_SEPARATOR . 'index.php';
 
+// Minify asset file(s) automatically!
+// TODO: <https://github.com/taufik-nurrohman/kirby-minify/issues/1>
+function __minify(?string $value) {
+    $value = x\minify\h_t_m_l($value);
+    if (!$value || false === strpos($value, '<')) {
+        return $value;
+    }
+    if (false !== strpos($value, '<link ')) {
+        $value = preg_replace_callback('/<link\s(?>"[^"]*"|\'[^\']*\'|[^>]+)>/', static function ($m) {
+            if (false === strpos($m[0], ' href=') || false === strpos($m[0], ' rel=')) {
+                return $m[0];
+            }
+            if (!preg_match('/\srel=(?>"stylesheet"|\'stylesheet\'|stylesheet(?=[\s\/>]))/', $m[0])) {
+                return $m[0];
+            }
+            return preg_replace_callback('/\shref=("[^"]+"|\'[^\']+\'|[^\s\/>]+)/', static function ($m) {
+                var_dump($m[1]);
+            }, $m[0]);
+        }, $value);
+    }
+    if (false !== strpos($value, '</script>')) {
+        $value = preg_replace_callback('/<script\s(?>"[^"]*"|\'[^\']*\'|[^>]+)>/', static function ($m) {
+            if (false === strpos($m[0], ' src=')) {
+                return $m[0];
+            }
+            return preg_replace_callback('/\ssrc=("[^"]+"|\'[^\']+\'|[^\s\/>]+)/', static function ($m) {
+                var_dump($m[1]);
+            }, $m[0]);
+        }, $value);
+    }
+    exit; // TODO
+    return $value;
+}
+
 // Register a plugin hook to execute after the response body is ready
 Kirby::plugin('taufik-nurrohman/minify', [
     'hooks' => [
@@ -106,8 +140,9 @@ Kirby::plugin('taufik-nurrohman/minify', [
                 'htm' => true,
                 'html' => true
             ],
-            'f' => "x\\minify\\h_t_m_l",
+            'f' => '__minify',
             'test' => function (string $v) {
+                $v = trim($v);
                 return '<!doctype' === strtolower(strtok($v, " \n\r\t")) || '</html>' === strtolower(substr($v, -7));
             },
             'types' => [
@@ -136,6 +171,7 @@ Kirby::plugin('taufik-nurrohman/minify', [
             ],
             'f' => "x\\minify\\j_s_o_n",
             'test' => function (string $v) {
+                $v = trim($v);
                 if (isset($v[0]) && false !== strpos('[{', $v[0]) && false !== strpos(']}', substr($v, -1))) {
                     if (function_exists('json_validate') && json_validate($v) || null !== json_decode($v)) {
                         return true;
@@ -179,7 +215,8 @@ Kirby::plugin('taufik-nurrohman/minify', [
             ],
             'f' => "x\\minify\\x_m_l",
             'test' => function (string $v) {
-                return '<?xml' === strtolower(strtok($v, " \n\r\t?"));
+                $v = trim($v);
+                return '<?xml' === trim(strtolower(strtok($v, " \n\r\t")), '?');
             },
             'types' => [
                 'application/atom+xml' => true,
