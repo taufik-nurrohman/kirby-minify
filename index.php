@@ -2,37 +2,167 @@
 
 require __DIR__ . DIRECTORY_SEPARATOR . 'minify' . DIRECTORY_SEPARATOR . 'index.php';
 
-// Minify asset file(s) automatically!
-// TODO: <https://github.com/taufik-nurrohman/kirby-minify/issues/1>
+// <https://github.com/taufik-nurrohman/kirby-minify/issues/1>
 function __minify(?string $value) {
     $value = x\minify\h_t_m_l($value);
     if (!$value || false === strpos($value, '<')) {
         return $value;
     }
-    if (false !== strpos($value, '<link ')) {
-        $value = preg_replace_callback('/<link\s(?>"[^"]*"|\'[^\']*\'|[^>]+)>/', static function ($m) {
-            if (false === strpos($m[0], ' href=') || false === strpos($m[0], ' rel=')) {
+    $options = (array) (option('taufik-nurrohman.minify') ?? []);
+    if (empty($options['HTML']['files'])) {
+        return $value;
+    }
+    $assets_root = kirby()->root('assets');
+    $assets_url = kirby()->urls()->assets;
+    if (false !== strpos($value, '<img ') && (!array_key_exists('active', $options['XML'] ?? []) || !empty($options['XML']['active'])) && !empty($options['HTML']['files']['svg'])) {
+        $value = preg_replace_callback('/<img\s(?>"[^"]*"|\'[^\']*\'|[^>]+)+>/', static function ($m) use ($assets_root, $assets_url, $options) {
+            if (false === strpos($m[0], 'src=')) {
                 return $m[0];
             }
-            if (!preg_match('/\srel=(?>"stylesheet"|\'stylesheet\'|stylesheet(?=[\s\/>]))/', $m[0])) {
-                return $m[0];
-            }
-            return preg_replace_callback('/\shref=("[^"]+"|\'[^\']+\'|[^\s\/>]+)/', static function ($m) {
-                var_dump($m[1]);
+            return preg_replace_callback('/\bsrc=("[^"]+"|\'[^\']+\'|[^\s>]+)/', static function ($m) use ($assets_root, $assets_url, $options) {
+                if ('"' === ($q = $m[1][0]) && $q === substr($m[1], -1) || "'" === ($q = $m[1][0]) && $q === substr($m[1], -1)) {
+                    $m[1] = \substr($m[1], 1, -1);
+                } else {
+                    $q = "";
+                }
+                // Resolve relative URL
+                if ('/' === ($m[1][0] ?? 0)) {
+                    $m[1] = $assets_url . $m[1];
+                }
+                // URL does not match with `http://127.0.0.1/assets/**.svg`
+                if (0 !== strpos($m[1], $assets_url . '/')) {
+                    return $m[0];
+                }
+                // File `.\srv\http\assets\**.svg` does not exist
+                if (!$file = stream_resolve_include_path($assets_root . substr(strtok($m[1], '?&#'), strlen($assets_url)))) {
+                    return $m[0];
+                }
+                // Skip minification if you have already minified the file and then manually include it into the site!
+                if ('.min.svg' === substr($file, -8)) {
+                    return $m[0];
+                }
+                $file_new = substr($file, 0, -4) . '.min.svg';
+                // Compare the file modification time of the original file with the file modification time of the
+                // minified file. If the original file modification time is newer, then update the minified file! If the
+                // minified file does not exist yet, then create it!
+                if (!is_file($file_new) || filemtime($file) > filemtime($file_new)) {
+                    // Create a minified file and then save it along with the original file as `**.min.svg`. Be aware
+                    // that this will wipe the existing `**.min.svg` file if you already have it. You probably have
+                    // created it before with a better minification script using the Node.js build tool and such, which
+                    // is more optimized in every way.
+                    file_put_contents($file_new, x\minify\x_m_l(file_get_contents($file)));
+                }
+                $v = dechex(filemtime($file));
+                if ($query = strstr($m[1], '?')) {
+                    $a = explode('#', $query, 2);
+                    parse_str($a, $r);
+                    if (isset($r['v'])) {
+                        $r[$v] = 1;
+                    } else {
+                        $r['v'] = $v;
+                    }
+                    $query = http_build_query($r) . (isset($a[1]) ? '#' . $a[1] : "");
+                } else {
+                    $a = explode('#', $m[1], 2);
+                    $query = '?v=' . $v . (isset($a[1]) ? '#' . $a[1] : "");
+                }
+                return 'src=' . $q . substr(strtok($m[1], '?&#'), 0, -4) . '.min.svg' . $query . $q;
             }, $m[0]);
         }, $value);
     }
-    if (false !== strpos($value, '</script>')) {
-        $value = preg_replace_callback('/<script\s(?>"[^"]*"|\'[^\']*\'|[^>]+)>/', static function ($m) {
-            if (false === strpos($m[0], ' src=')) {
+    if (false !== strpos($value, '<link ') && (!array_key_exists('active', $options['CSS'] ?? []) || !empty($options['CSS']['active'])) && !empty($options['HTML']['files']['css'])) {
+        $value = preg_replace_callback('/<link\s(?>"[^"]*"|\'[^\']*\'|[^>]+)+>/', static function ($m) use ($assets_root, $assets_url, $options) {
+            if (false === strpos($m[0], 'href=') || false === strpos($m[0], 'rel=')) {
                 return $m[0];
             }
-            return preg_replace_callback('/\ssrc=("[^"]+"|\'[^\']+\'|[^\s\/>]+)/', static function ($m) {
-                var_dump($m[1]);
+            if (!preg_match('/\brel=(?>"stylesheet"|\'stylesheet\'|stylesheet\b)/', $m[0])) {
+                return $m[0];
+            }
+            return preg_replace_callback('/\bhref=("[^"]+"|\'[^\']+\'|[^\s>]+)/', static function ($m) use ($assets_root, $assets_url, $options) {
+                if ('"' === ($q = $m[1][0]) && $q === substr($m[1], -1) || "'" === ($q = $m[1][0]) && $q === substr($m[1], -1)) {
+                    $m[1] = \substr($m[1], 1, -1);
+                } else {
+                    $q = "";
+                }
+                if ('/' === ($m[1][0] ?? 0)) {
+                    $m[1] = $assets_url . $m[1];
+                }
+                if (0 !== strpos($m[1], $assets_url . '/')) {
+                    return $m[0];
+                }
+                if (!$file = stream_resolve_include_path($assets_root . substr(strtok($m[1], '?&#'), strlen($assets_url)))) {
+                    return $m[0];
+                }
+                if ('.min.css' === substr($file, -8)) {
+                    return $m[0];
+                }
+                $file_new = substr($file, 0, -4) . '.min.css';
+                if (!is_file($file_new) || filemtime($file) > filemtime($file_new)) {
+                    file_put_contents($file_new, x\minify\c_s_s(file_get_contents($file)));
+                }
+                $v = dechex(filemtime($file));
+                if ($query = strstr($m[1], '?')) {
+                    $a = explode('#', $query, 2);
+                    parse_str($a, $r);
+                    if (isset($r['v'])) {
+                        $r[$v] = 1;
+                    } else {
+                        $r['v'] = $v;
+                    }
+                    $query = http_build_query($r) . (isset($a[1]) ? '#' . $a[1] : "");
+                } else {
+                    $a = explode('#', $m[1], 2);
+                    $query = '?v=' . $v . (isset($a[1]) ? '#' . $a[1] : "");
+                }
+                return 'href=' . $q . substr(strtok($m[1], '?&#'), 0, -4) . '.min.css' . $query . $q;
             }, $m[0]);
         }, $value);
     }
-    exit; // TODO
+    if (false !== strpos($value, '<script ') && (!array_key_exists('active', $options['JS'] ?? []) || !empty($options['JS']['active'])) && !empty($options['HTML']['files']['js'])) {
+        $value = preg_replace_callback('/<script\s(?>"[^"]*"|\'[^\']*\'|[^>]+)+>/', static function ($m) use ($assets_root, $assets_url, $options) {
+            if (false === strpos($m[0], 'src=')) {
+                return $m[0];
+            }
+            return preg_replace_callback('/\bsrc=("[^"]+"|\'[^\']+\'|[^\s>]+)/', static function ($m) use ($assets_root, $assets_url, $options) {
+                if ('"' === ($q = $m[1][0]) && $q === substr($m[1], -1) || "'" === ($q = $m[1][0]) && $q === substr($m[1], -1)) {
+                    $m[1] = \substr($m[1], 1, -1);
+                } else {
+                    $q = "";
+                }
+                if ('/' === ($m[1][0] ?? 0)) {
+                    $m[1] = $assets_url . $m[1];
+                }
+                if (0 !== strpos($m[1], $assets_url . '/')) {
+                    return $m[0];
+                }
+                if (!$file = stream_resolve_include_path($assets_root . substr(strtok($m[1], '?&#'), strlen($assets_url)))) {
+                    return $m[0];
+                }
+                if ('.min.js' === substr($file, -7)) {
+                    return $m[0];
+                }
+                $file_new = substr($file, 0, -3) . '.min.js';
+                if (!is_file($file_new) || filemtime($file) > filemtime($file_new)) {
+                    file_put_contents($file_new, x\minify\j_s(file_get_contents($file)));
+                }
+                $v = dechex(filemtime($file));
+                if ($query = strstr($m[1], '?')) {
+                    $a = explode('#', $query, 2);
+                    parse_str($a, $r);
+                    if (isset($r['v'])) {
+                        $r[$v] = 1;
+                    } else {
+                        $r['v'] = $v;
+                    }
+                    $query = http_build_query($r) . (isset($a[1]) ? '#' . $a[1] : "");
+                } else {
+                    $a = explode('#', $m[1], 2);
+                    $query = '?v=' . $v . (isset($a[1]) ? '#' . $a[1] : "");
+                }
+                return 'src=' . $q . substr(strtok($m[1], '?&#'), 0, -3) . '.min.js' . $query . $q;
+            }, $m[0]);
+        }, $value);
+    }
     return $value;
 }
 
@@ -58,7 +188,7 @@ Kirby::plugin('taufik-nurrohman/minify', [
                 return $result;
             }
             $extensions = $tests = $types = [];
-            $options = option('taufik-nurrohman.minify');
+            $options = (array) (option('taufik-nurrohman.minify') ?? []);
             foreach ($options as $k => $v) {
                 // Assume configuration without `active` key as active by default
                 if (array_key_exists('active', $v) && !$v['active']) {
@@ -141,6 +271,11 @@ Kirby::plugin('taufik-nurrohman/minify', [
                 'html' => true
             ],
             'f' => '__minify',
+            'files' => [
+                'css' => true,
+                'js' => true,
+                'svg' => true
+            ],
             'test' => function (string $v) {
                 $v = trim($v);
                 return '<!doctype' === strtolower(strtok($v, " \n\r\t")) || '</html>' === strtolower(substr($v, -7));

@@ -20,7 +20,7 @@ Installation
 ### Download
 
 Download the plugin via the
-[download link](https://github.com/taufik-nurrohman/kirby-minify/archive/refs/tags/v1.1.2.zip) and extract. Then put the
+[download link](https://github.com/taufik-nurrohman/kirby-minify/archive/refs/tags/v1.2.0.zip) and extract. Then put the
 extracted folder into the `.\site\plugins\` folder of your Kirby project. If the `plugins\` folder does not exist yet,
 create it first. The resulting folder structure should look like this:
 
@@ -65,7 +65,15 @@ return [
         'CSS' => [ /* … */ ],
         'HTML' => [
             // This will cause the HTML minifier to be disabled.
-            'active' => false
+            'active' => false,
+            'files' => [
+                // This will disable the minification of CSS files embedded in HTML via the `<link>` element.
+                'css' => false,
+                // This will disable the minification of JavaScript files embedded in HTML via the `<script>` element.
+                'js' => false,
+                // This will disable the minification of SVG files embedded in HTML via the `<img>` element.
+                'svg' => false
+            ]
         ],
         'JS' => [
             'extensions' => [
@@ -107,7 +115,7 @@ Notes
     to compression (e.g. compression of inline CSS and JavaScript code causes them to break) can be submitted
     [here][bug/minify].
  2. The `minify\` folder in this project contains the contents of the
-    [@taufik-nurrohman/minify](https://github.com/taufik-nurrohman/minify) repository. Ideally, it should be set as a
+    [PHP Minify](https://github.com/taufik-nurrohman/minify) repository. Ideally, it should be set as a
     [Git sub-module](https://git-scm.com/book/en/v2/Git-Tools-Submodules), however I decided to do a manual copy and
     paste of the files and folders to make it easier for users to install this plugin. Not everyone understands how to
     bring Git sub-modules into the project after doing a `git clone`. Git archive also won’t merge sub-modules
@@ -124,8 +132,8 @@ Notes
 Tests
 -----
 
-The [@taufik-nurrohman/minify](https://github.com/taufik-nurrohman/minify) project has it’s own tests. Here is an easy
-way you can do to run various tests specifically for this plugin:
+The [PHP Minify](https://github.com/taufik-nurrohman/minify) project has it’s own tests. Here is an easy way you can do
+to run various tests specifically for this plugin:
 
  1. Create a `.\content\my-content\test.txt` file.
  2. Create a `.\site\templates\test.css.php` file and paste in some random CSS code there to test the CSS minifier in
@@ -142,5 +150,6 @@ way you can do to run various tests specifically for this plugin:
 License
 -------
 
-This library is licensed under the [MIT License](LICENSE). Please consider
-[donating 💰](https://github.com/sponsors/taufik-nurrohman) if you benefit financially from this library.
+The [PHP Minify](https://github.com/taufik-nurrohman/minify) library is licensed under the [MIT License](LICENSE).
+Please consider [donating 💰](https://github.com/sponsors/taufik-nurrohman) if you benefit financially from this
+library.
