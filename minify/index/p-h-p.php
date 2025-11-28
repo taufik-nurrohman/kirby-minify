@@ -207,8 +207,8 @@ namespace x\minify {
                     }
                     continue;
                 }
-                if (\T_WHITESPACE === $v[0]) {
-                    $to .= false !== \strpos(' "/!#%&()*+,-.:;<=>?@[\]^`{|}~' . "'", \substr($to, -1)) ? "" : ' ';
+                if (\T_WHITESPACE === $v[0] && "" !== ($test = \substr($to, -1))) {
+                    $to .= false !== \strpos(' "/!#%&()*+,-.:;<=>?@[\]^`{|}~' . "'", $test) ? "" : ' ';
                     continue;
                 }
                 // Math operator(s)

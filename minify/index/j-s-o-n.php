@@ -9,33 +9,39 @@ namespace x\minify {
             return $from;
         }
         $c1 = ',:[]{}';
+        $c2 = " \n\r\t";
         $to = "";
-        while (false !== ($chop = \strpbrk($from, '"' . $c1))) {
-            if ("" !== ($v = \strstr($from, $c = $chop[0], true))) {
-                $from = $chop;
-                $to .= \trim($v);
+        while ("" !== $from) {
+            if ($n = \strspn($from, $c2)) {
+                $from = \substr($from, $n);
+                continue;
+            }
+            if ('"' === ($c = $from[0])) {
+                $max = \strlen($from);
+                $n = 1;
+                while ($n < $max) {
+                    if ("\\" === $from[$n] && $n + 1 < $max) {
+                        $n += 2;
+                        continue;
+                    }
+                    if ('"' === $from[$n]) {
+                        ++$n;
+                        break;
+                    }
+                    ++$n;
+                }
+                $to .= \substr($from, 0, $n);
+                $from = \substr($from, $n);
+                continue;
             }
             if (false !== \strpos($c1, $c)) {
+                $to .= $c;
                 $from = \substr($from, 1);
-                $to .= $chop[0];
                 continue;
             }
-            if ('""' === \substr($chop, 0, 2)) {
-                $from = \substr($from, 2);
-                $to .= '""';
-                continue;
-            }
-            if ('"' === $c && \preg_match('/^"[^"\\\\]*(?>\\\\.[^"\\\\]*)*"/', $chop, $m)) {
-                $from = \substr($from, \strlen($m[0]));
-                $to .= $m[0];
-                continue;
-            }
-            $from = "";
-            $to .= \trim($chop); // `false`, `null`, `true`, `1`, `1.0`
+            $to .= \substr($from, 0, $n = \strcspn($from, $c1 . $c2));
+            $from = \substr($from, $n);
         }
-        if ("" !== $from) {
-            $to .= \trim($from);
-        }
-        return "" !== ($to = \trim($to)) ? $to : null;
+        return "" !== $to ? $to : null;
     }
 }

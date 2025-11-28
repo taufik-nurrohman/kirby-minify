@@ -59,7 +59,7 @@ namespace x\minify {
             if ($n = \strspn($chop, $c4)) {
                 $from = \substr($from, $n);
                 // Case of `1 + ++asdf` or `1 - --asdf`
-                if (false !== \strpos('+-', $v = \substr($to, -1)) && 2 === \strspn($from, $v)) {
+                if ("" !== ($v = \substr($to, -1)) && false !== \strpos('+-', $v) && 2 === \strspn($from, $v)) {
                     $to .= ' ';
                 } else if ("" !== $from . $to && false === \strpos($c3, $from[0]) && false === \strpos($c3, $v)) {
                     $to .= ' ';
@@ -110,7 +110,7 @@ namespace x\minify {
                         } else {
                             $to .= '/*' . \trim(\substr($m[0], 3, -2)) . '*/';
                         }
-                    } else if ("" !== $from . $to && false !== \strpos('+-', $v = \substr($to, -1)) && $v === $from[0]) {
+                    } else if ("" !== $from . $to && "" !== ($v = \substr($to, -1)) && false !== \strpos('+-', $v) && $v === $from[0]) {
                         $to .= ' ';
                     }
                     continue;

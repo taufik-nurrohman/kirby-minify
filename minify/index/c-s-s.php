@@ -165,7 +165,7 @@ namespace x\minify {
                         $to .= '/*' . \trim(\substr($m[0], 3, -2)) . '*/';
                     }
                 // Case of `asdf/*asdf*/asdf{asdf:asdf}`
-                } else if ("" !== $to && false === \strpos($c3, \substr($to, -1))) {
+                } else if ("" !== $to && "" !== ($x = \substr($to, -1)) && false === \strpos($c3, $x)) {
                     $to .= ' ';
                 }
                 continue;
@@ -173,7 +173,7 @@ namespace x\minify {
             // `[…]`
             if ('[' === $c && \preg_match('/^\[(?>' . $r3 . '|[^]]+)+\]/', $chop, $m)) {
                 $from = \substr($from, \strlen($m[0]));
-                if ("" !== $to && false !== \strpos($c4, \substr($to, -1))) {
+                if ("" !== $to && "" !== ($x = \substr($to, -1)) && false !== \strpos($c4, $x)) {
                     $to = \trim($to) . ' ';
                 }
                 $to .= '[';
@@ -194,7 +194,7 @@ namespace x\minify {
                         $to .= $test;
                         continue;
                     }
-                    if (false === \strpos('"$\'*=[]^|~', \substr($to, -1)) && false === \strpos('"$\'*=[]^|~', $v[0])) {
+                    if ("" !== ($x = \substr($to, -1)) && false === \strpos('"$\'*=[]^|~', $x) && false === \strpos('"$\'*=[]^|~', $v[0])) {
                         $to .= ' '; // Case of `[asdf=asdf i]` or `[asdf="asdf"i]`
                     }
                     $to .= $v;
