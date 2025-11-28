@@ -20,7 +20,7 @@ Installation
 ### Download
 
 Download the plugin via the
-[download link](https://github.com/taufik-nurrohman/kirby-minify/archive/refs/tags/v1.2.0.zip) and extract. Then put the
+[download link](https://github.com/taufik-nurrohman/kirby-minify/archive/refs/tags/v1.2.1.zip) and extract. Then put the
 extracted folder into the `.\site\plugins\` folder of your Kirby project. If the `plugins\` folder does not exist yet,
 create it first. The resulting folder structure should look like this:
 
